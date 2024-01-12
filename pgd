@@ -1,50 +1,5 @@
 #!/usr/bin/env python3
-import os
-
-from PyGD.igdownloader import PyGramDownloader
-from argparse import ArgumentParser
-
-script_path = os.path.realpath(__file__)
-path = os.path.dirname(script_path) + "/download"
+from PyGD import main
 
 if __name__ == "__main__":
-    argument_parser = ArgumentParser(
-        description="PyXDownloader is a tool used to download media from a specified username or link."
-    )
-    argument_parser.add_argument(
-        "-f", "--function", type=str, dest="function", help="allmedia, images"
-    )
-    argument_parser.add_argument(
-        "-p", "--path", type=str, dest="path", help="Path where to save photos or videos.", default=path
-    )
-    argument_parser.add_argument(
-        "-un", "--username", type=str, dest="username", help="username from profile user account."
-    )
-    argument_parser.add_argument(
-        "-count", "--count", type=int, dest="count", help="The amount of data to be downloaded.", default=33
-    )
-    argument_parser.add_argument(
-        "-max_id", "--max_id", type=str, dest="max_id", help="The key used to load the next page.", default=None
-    )
-
-    args = argument_parser.parse_args()
-
-    cookie = 'mid=ZZvoXwAEAAGlwVYJ5LW1bmn7R-EP; ig_did=AFD90341-FBE2-4EC2-9AD4-119ED91489F6; ig_nrcb=1; datr=XuibZa27KKTrPW9KB1hfJ9BB; ds_user_id=63948446931; dpr=0.8999999761581421; csrftoken=drx5GLrM3ig5q6RLgVKCNjYPTicOeprb; sessionid=63948446931%3ApdsBTPZe3hW2uf%3A10%3AAYfkN2z2nh9Jkn7enJ9gX6-t9VFE3KBrlvU0LMohTA; rur="NHA\05463948446931\0541736316293:01f7f869bfd8bba8c027aeccbe66712c6a825083d92893ca4f4a5a9a3e3912d022c129ee"'  # Required
-    PXD = PyGramDownloader(cookie=cookie)
-
-    match args.function:
-        case "allmedia":
-            PXD.allmedia(
-                username=args.username,
-                path=args.path,
-                count=args.count,
-                max_id=args.max_id
-            )
-
-        case "images":
-            PXD.images(
-                username=args.username,
-                path=args.path,
-                count=args.count,
-                max_id=args.max_id
-            )
+    main()

@@ -6,13 +6,18 @@ from requests.sessions import Session
 from urllib.parse import urljoin, unquote, quote
 from datetime import datetime
 from PyGD.utility import Utility
+from PyGD.exception import *
 from faker import Faker
-from typing import Any
+from typing import Any, Optional
 from tqdm import tqdm
 
 
 class PyGramDownloader:
-    def __init__(self, cookie: str = None) -> Any:
+    def __init__(self, cookie: str) -> Any:
+        if not isinstance(cookie, str):
+            raise TypeError("Invalid parameter for 'PyGramDownloader'. Expected str, got {}".format(
+                type(cookie).__name__)
+            )
         self.__cookie = cookie
         self.__session = Session()
         self.__fake = Faker()
@@ -23,18 +28,29 @@ class PyGramDownloader:
         self.__headers["Sec-Fetch-Dest"] = "empty"
         self.__headers["Sec-Fetch-Mode"] = "cors"
         self.__headers["Sec-Fetch-Site"] = "same-site"
-        if cookie is not None:
-            self.__headers["Cookie"] = cookie
+        self.__headers["Cookie"] = cookie
 
-    def __Csrftoken(self):
+    def __Csrftoken(self) -> str:
         pattern = re.compile(r'csrftoken=([a-zA-Z0-9_-]+)')
         matches = pattern.search(self.__cookie)
         if matches:
             csrftoken = matches.group(1)
             return csrftoken
-        return None
+        else:
+            raise CSRFTokenMissingError(
+                "Error! CSRF token is missing. Please ensure that a valid CSRF token is included in the cookie."
+            )
 
-    def __processmedia(self, item: dict, func_name: str):
+    def __processmedia(self, item: dict, func_name: str) -> list:
+        if not isinstance(item, dict):
+            raise TypeError("Invalid parameter for '__processmedia'. Expected dict, got {}".format(
+                type(item).__name__)
+            )
+        if not isinstance(func_name, str):
+            raise TypeError("Invalid parameter for '__processmedia'. Expected str, got {}".format(
+                type(func_name).__name__)
+            )
+
         medias = []
 
         match func_name:
@@ -62,10 +78,14 @@ class PyGramDownloader:
                     )
                 ]
                 medias.extend(images)
-
         return medias
 
-    def __download(self, url):
+    def __download(self, url: str) -> Any:
+        if not isinstance(url, str):
+            raise TypeError("Invalid parameter for '__download'. Expected str, got {}".format(
+                type(url).__name__)
+            )
+
         user_agent = self.__fake.user_agent()
         self.__headers["User-Agent"] = user_agent
         resp = self.__session.request(
@@ -86,12 +106,49 @@ class PyGramDownloader:
                 matches = pattern.search(url)
                 if matches:
                     filename = matches.group(1)
+                else:
+                    raise URLValidationError(
+                        f"Error! Invalid URL \"{url}\". Make sure the URL is correctly formatted and complete."
+                    )
             return data, filename
         else:
-            raise Exception(
-                f"Error! status code {resp.status_code} : {resp.reason}")
+            raise HTTPErrorException(
+                f"Error! status code {resp.status_code} : {resp.reason}"
+            )
 
-    def allmedia(self, username: str, path, count: int = 33, max_id: str = None, proxy=None, **kwargs):
+    def allmedia(
+            self,
+            username: str,
+            path: str,
+            count: Optional[int | str] = 33,
+            max_id: Optional[str] = None,
+            proxy: Optional[str] = None,
+            **kwargs
+    ) -> Any:
+
+        if not isinstance(username, str):
+            raise TypeError("Invalid parameter for 'allmedia'. Expected str, got {}".format(
+                type(username).__name__)
+            )
+        if not isinstance(path, str):
+            raise TypeError("Invalid parameter for 'allmedia'. Expected str, got {}".format(
+                type(path).__name__)
+            )
+        if not isinstance(count, (int | str)):
+            raise TypeError("Invalid parameter for 'allmedia'. Expected int|str, got {}".format(
+                type(count).__name__)
+            )
+        if max_id is not None:
+            if not isinstance(max_id, str):
+                raise TypeError("Invalid parameter for 'allmedia'. Expected str, got {}".format(
+                    type(max_id).__name__)
+                )
+        if proxy is not None:
+            if not isinstance(proxy, str):
+                raise TypeError("Invalid parameter for 'allmedia'. Expected str, got {}".format(
+                    type(proxy).__name__)
+                )
+
         Utility.mkdir(path=path)
 
         print(
@@ -132,17 +189,52 @@ class PyGramDownloader:
             for link in tqdm(medias, desc="Downloading"):
                 try:
                     data_content, filename = self.__download(url=link)
-                    with open(f"download/{filename}", "wb") as file:
+                    with open(f"{path}/{filename}", "wb") as file:
                         file.write(data_content)
-                except requests.RequestException:
-                    pass
+                except RequestProcessingError:
+                    raise RequestProcessingError(
+                        "FAILED! Error processing the request!"
+                    )
             print("DONE!!!🥳🥳🥳")
             print(f"next_max_id for next page \"{next_max_id}\"")
         else:
-            raise Exception(
-                f"Error! status code {resp.status_code} : {resp.reason}")
+            raise HTTPErrorException(
+                f"Error! status code {resp.status_code} : {resp.reason}"
+            )
 
-    def images(self, username: str, path, count: int = 33, max_id: str = None, proxy=None, **kwargs):
+    def images(
+            self,
+            username: str,
+            path: str,
+            count: Optional[int | str] = 33,
+            max_id: Optional[str] = None,
+            proxy: Optional[str] = None,
+            **kwargs
+    ) -> Any:
+
+        if not isinstance(username, str):
+            raise TypeError("Invalid parameter for 'images'. Expected str, got {}".format(
+                type(username).__name__)
+            )
+        if not isinstance(path, str):
+            raise TypeError("Invalid parameter for 'images'. Expected str, got {}".format(
+                type(path).__name__)
+            )
+        if not isinstance(count, (int | str)):
+            raise TypeError("Invalid parameter for 'images'. Expected int|str, got {}".format(
+                type(count).__name__)
+            )
+        if max_id is not None:
+            if not isinstance(max_id, str):
+                raise TypeError("Invalid parameter for 'images'. Expected str, got {}".format(
+                    type(max_id).__name__)
+                )
+        if proxy is not None:
+            if not isinstance(proxy, str):
+                raise TypeError("Invalid parameter for 'images'. Expected str, got {}".format(
+                    type(proxy).__name__)
+                )
+
         Utility.mkdir(path=path)
 
         print(
@@ -183,15 +275,18 @@ class PyGramDownloader:
             for link in tqdm(medias, desc="Downloading"):
                 try:
                     data_content, filename = self.__download(url=link)
-                    with open(f"images/{filename}", "wb") as file:
+                    with open(f"{path}/{filename}", "wb") as file:
                         file.write(data_content)
-                except requests.RequestException:
-                    pass
+                except RequestProcessingError:
+                    raise RequestProcessingError(
+                        "FAILED! Error processing the request!"
+                    )
             print("DONE!!!🥳🥳🥳")
             print(f"next_max_id for next page \"{next_max_id}\"")
         else:
-            raise Exception(
-                f"Error! status code {resp.status_code} : {resp.reason}")
+            raise HTTPErrorException(
+                f"Error! status code {resp.status_code} : {resp.reason}"
+            )
 
 
 if __name__ == "__main__":
