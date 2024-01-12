@@ -238,7 +238,7 @@ class PyGramDownloader:
         Utility.mkdir(path=path)
 
         print(
-            f"Downloading all image from Instagram users with the name @{username}."
+            f"Downloading all media from Instagram users with the name @{username}."
         )
         print(f"Saved in path: \"{path}\"")
 
