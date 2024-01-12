@@ -290,5 +290,5 @@ class PyGramDownloader:
 
 
 if __name__ == "__main__":
-    cookie = 'mid=ZZvoXwAEAAGlwVYJ5LW1bmn7R-EP; ig_did=AFD90341-FBE2-4EC2-9AD4-119ED91489F6; ig_nrcb=1; datr=XuibZa27KKTrPW9KB1hfJ9BB; ds_user_id=63948446931; dpr=0.8999999761581421; csrftoken=drx5GLrM3ig5q6RLgVKCNjYPTicOeprb; sessionid=63948446931%3ApdsBTPZe3hW2uf%3A10%3AAYfkN2z2nh9Jkn7enJ9gX6-t9VFE3KBrlvU0LMohTA; rur="NHA\05463948446931\0541736316293:01f7f869bfd8bba8c027aeccbe66712c6a825083d92893ca4f4a5a9a3e3912d022c129ee"'
+    cookie = ''
     sb = PyGramDownloader(cookie=cookie)
