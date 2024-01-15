@@ -13,6 +13,34 @@ from tqdm import tqdm
 
 
 class PyGramDownloader:
+    """
+    PyGramDownloader is a sophisticated tool designed to facilitate users in downloading images and videos from user posts on the popular social media platform, Instagram. With an intuitive interface and powerful functionality, PyGramDownloader allows users to explore and save interesting content from Instagram accounts they admire.
+
+    Key Features of PyGramDownloader:
+
+        - Download Images and Videos:
+            PyGramDownloader enables users to download high-quality images and videos from Instagram user posts. With a single click, users can save compelling content to share with friends or keep for later viewing.
+
+        - User-Friendly Interface:
+            The PyGramDownloader user interface is designed to provide a seamless and easily understandable user experience. With simple navigation, users can quickly grasp how to use the tool without requiring in-depth technical knowledge.
+
+        - High-Quality Download Options:
+            PyGramDownloader provides users with the flexibility to choose the quality of images and videos they want to download. This allows users to save storage space and ensure that the downloaded content aligns with their preferences.
+
+        - Support for Various Instagram Accounts:
+            The tool supports downloads from various Instagram accounts, allowing users to explore and download content from friends, celebrities, or other popular accounts.
+
+        - Security and Privacy:
+            PyGramDownloader is implemented with a focus on user security and privacy. The tool does not require user login information, ensuring the security of users' Instagram accounts.
+
+        - Regular Updates:
+            To maintain availability and reliability, PyGramDownloader receives regular updates. This ensures that the tool can always adapt to the latest changes on the Instagram platform.
+
+    With PyGramDownloader, users can easily explore and collect their favorite content from Instagram, offering a fast, secure, and intuitive downloading experience.
+
+    Created and developed by @muhfalihr.
+    """
+
     def __init__(self, cookie: str) -> Any:
         if not isinstance(cookie, str):
             raise TypeError("Invalid parameter for 'PyGramDownloader'. Expected str, got {}".format(
@@ -31,6 +59,9 @@ class PyGramDownloader:
         self.__headers["Cookie"] = cookie
 
     def __Csrftoken(self) -> str:
+        """
+        Takes the CsrfToken from the given cookie and returns the value of the csrftoken obtained and is of string data type.
+        """
         pattern = re.compile(r'csrftoken=([a-zA-Z0-9_-]+)')
         matches = pattern.search(self.__cookie)
         if matches:
@@ -42,6 +73,9 @@ class PyGramDownloader:
             )
 
     def __processmedia(self, item: dict, func_name: str) -> list:
+        """
+        Processes the response from a request and takes the value in the form of the URL of a user's posted media and returns it in the form of a list.
+        """
         if not isinstance(item, dict):
             raise TypeError("Invalid parameter for '__processmedia'. Expected dict, got {}".format(
                 type(item).__name__)
@@ -81,6 +115,9 @@ class PyGramDownloader:
         return medias
 
     def __download(self, url: str) -> Any:
+        """
+        Make a request to the URL obtained and retrieve the filename and content from the API response and return the value of the filename in the form of a string and data in the form of the response content.
+        """
         if not isinstance(url, str):
             raise TypeError("Invalid parameter for '__download'. Expected str, got {}".format(
                 type(url).__name__)
@@ -125,6 +162,19 @@ class PyGramDownloader:
             proxy: Optional[str] = None,
             **kwargs
     ) -> Any:
+        """
+        Carry out the request process and process the response to retrieve all the media URLs obtained and download all the media URLs obtained.
+
+        Arguments :
+          - username = (Required) @example_name
+          - path = (Required) The path to where the download results are stored.
+          - count = (Optional) The number of posts from which data will be taken. The default value is 33.
+          - max_id = (Optional) A value used to get the next API response. The default value is None.
+          - proxy = (Optional) Used as an intermediary between the client and the server you access. These parameters are an important part of the request configuration and can help you direct traffic through proxy servers that may be needed for various purposes, such as security, anonymity, or access control.
+
+        Keyword Argument:
+          - **kwargs
+        """
 
         if not isinstance(username, str):
             raise TypeError("Invalid parameter for 'allmedia'. Expected str, got {}".format(
@@ -211,6 +261,19 @@ class PyGramDownloader:
             proxy: Optional[str] = None,
             **kwargs
     ) -> Any:
+        """
+        Carry out the request process and process the response to retrieve all media URLs in the form of images obtained and download all media URLs obtained.
+
+        Arguments :
+          - username = (Required) @example_name
+          - path = (Required) The path to where the download results are stored.
+          - count = (Optional) The number of posts from which data will be taken. The default value is 33.
+          - max_id = (Optional) A value used to get the next API response. The default value is None.
+          - proxy = (Optional) Used as an intermediary between the client and the server you access. These parameters are an important part of the request configuration and can help you direct traffic through proxy servers that may be needed for various purposes, such as security, anonymity, or access control.
+
+        Keyword Argument:
+          - **kwargs
+        """
 
         if not isinstance(username, str):
             raise TypeError("Invalid parameter for 'images'. Expected str, got {}".format(
