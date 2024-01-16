@@ -1,3 +1,5 @@
+[![Instagram: ____mfr.py](https://img.shields.io/badge/Instagram-Follow%20Me-blue?style=social&logo=instagram)](https://www.instagram.com/_____mfr.py/) [![Instagram: mfr](https://img.shields.io/badge/Twitter-Follow%20Me-blue?style=social&logo=Twitter)](https://twitter.com/muhfalihr)
+
 # PyGramDownloader
 
 ![ProjectImage](https://github.com/muhfalihr/mystorage/blob/master/20240113_204134.jpg)

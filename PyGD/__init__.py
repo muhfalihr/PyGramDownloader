@@ -32,6 +32,7 @@ def main():
 
     With PyGramDownloader, users can easily explore and collect their favorite content from Instagram, offering a fast, secure, and intuitive downloading experience.
 
+    Created and developed by @muhfalihr.
     """
     argument_parser = ArgumentParser(
         description="PyGramDownloader is a sophisticated tool designed to facilitate users in downloading images and videos from user posts on the popular social media platform, Instagram."
